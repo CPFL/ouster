@@ -87,7 +87,7 @@ using PulseMode = pulse_mode_t;
  * 
  * @note This function was added to configure advanced operation modes for Autoware
  */
-void set_advanced_params(OperationMode operation_mode, PulseMode pulse_mode, bool window_rejection);
+void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str, bool window_rejection);
 
 }
 }

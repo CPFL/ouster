@@ -9,14 +9,14 @@
   <arg name="imu_port" default="7503" doc="port to which the sensor should send imu data"/>
   <arg name="replay" default="false" doc="when true, the node will listen on ~/lidar_packets and ~/imu_packets for data instead of attempting to connect to a sensor"/>
   <arg name="scan_dur_ns" default="100000000" doc="nanoseconds to batch lidar packets before publishing a cloud"/>
-  <arg name="pointcloud_mode" default="XYZIR" doc="Point cloud mode, supported modes: NATIVE, XYZ, XYZI, XYZIR, XYZIF, XYZIFN (I=intensity, R=ring, F=reflectivity, N=ambient noise). NATIVE is XYZIRFt where t=point timestamp."/>
+  <arg name="pointcloud_mode" default="XYZIR" doc="Point cloud mode, supported modes: NATIVE, XYZ, XYZI, XYZIR, XYZIF, XYZIRF, XYZIFN, XYZIRFN (I=intensity, R=ring, F=reflectivity, N=ambient noise). NATIVE is XYZIRFt where t=point timestamp."/>
   <arg name="lidar_frame_name" default="velodyne" doc="Frame name for lidar output message"/>
   <arg name="lidar_topic_name" default="/points_raw" doc="Topic name for lidar output message"/>
   <arg name="imu_frame_name" default="imu" doc="Frame name for IMU output message"/>
   <arg name="imu_topic_name" default="/imu_raw" doc="Topic name for IMU output message"/>
   <arg name="operation_mode" default="1024x10" doc="Supported operation modes: 512x10, 1024x10, 2048x10, 512x20, 1024x20 (horizontal resolution x scan rate)"/>
-  <arg name="pulse_mode" default="0" doc="Laser pulse width"/>
-  <arg name="window_rejection" default="true" doc="Window rejection enable"/>
+  <arg name="pulse_mode" default="STANDARD" doc="Laser pulse width, available modes: STANDARD and NARROW"/>
+  <arg name="window_rejection" default="true" doc="Window (short range) rejection enable"/>
 
   <node pkg="ouster_ros" type="ouster_ros" name="ouster_ros" output="screen" >
     <param name="os1_lidar_address" value="$(arg lidar_address)"/>

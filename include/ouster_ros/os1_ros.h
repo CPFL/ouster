@@ -25,7 +25,9 @@ using CloudOS1XYZ = pcl::PointCloud<pcl::PointXYZ>;
 using CloudOS1XYZI = pcl::PointCloud<pcl::PointXYZI>;
 using CloudOS1XYZIR = pcl::PointCloud<PointXYZIR>;
 using CloudOS1XYZIF = pcl::PointCloud<PointXYZIF>;
+using CloudOS1XYZIRF = pcl::PointCloud<PointXYZIRF>;
 using CloudOS1XYZIFN = pcl::PointCloud<PointXYZIFN>;
+using CloudOS1XYZIRFN = pcl::PointCloud<PointXYZIRFN>;
 using ns = std::chrono::nanoseconds;
 
 /**
@@ -146,9 +148,18 @@ void convert2XYZIR(const CloudOS1& in, CloudOS1XYZIR& out);
 void convert2XYZIF(const CloudOS1& in, CloudOS1XYZIF& out);
 
 /**
- * Converts the OS1 native point format to XYZIFN (with intensity and reflectivity and ambient noise)
+ * Converts the OS1 native point format to XYZIRF (with intensity, ring and reflectivity) 
+ */
+void convert2XYZIRF(const CloudOS1& in, CloudOS1XYZIRF& out);
+
+/**
+ * Converts the OS1 native point format to XYZIFN (with intensity, reflectivity and ambient noise)
  */
 void convert2XYZIFN(const CloudOS1& in, CloudOS1XYZIFN& out);
 
+/**
+ * Converts the OS1 native point format to XYZIRFN (with intensity, ring, reflectivity and ambient noise)
+ */
+void convert2XYZIRFN(const CloudOS1& in, CloudOS1XYZIRFN& out);
 }
 }

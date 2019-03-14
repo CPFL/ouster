@@ -91,9 +91,17 @@ sensor_msgs::PointCloud2 cloud_to_cloud_msg(const CloudOS1& cloud, ns timestamp,
     	CloudOS1XYZIF cloud_aux;
     	convert2XYZIF(cloud, cloud_aux);
     	pcl::toROSMsg(cloud_aux, msg);
+    } else if (_pointcloud_mode == "XYZIRF") {
+    	CloudOS1XYZIRF cloud_aux;
+    	convert2XYZIRF(cloud, cloud_aux);
+    	pcl::toROSMsg(cloud_aux, msg);
     } else if (_pointcloud_mode == "XYZIFN") {
     	CloudOS1XYZIFN cloud_aux;
     	convert2XYZIFN(cloud, cloud_aux);
+    	pcl::toROSMsg(cloud_aux, msg);
+    } else if (_pointcloud_mode == "XYZIRFN") {
+    	CloudOS1XYZIRFN cloud_aux;
+    	convert2XYZIRFN(cloud, cloud_aux);
     	pcl::toROSMsg(cloud_aux, msg);
     } else { //"NATIVE"
     	pcl::toROSMsg(cloud, msg);
@@ -238,7 +246,7 @@ void convert2XYZIR(const CloudOS1& in, CloudOS1XYZIR& out)
        q.y = p.y;
        q.z = p.z;
        q.intensity = ((float)p.intensity/65535.0)*255.0; //velodyne uses values in [0..255] range
-       q.ring = p.ring;
+       q.ring = pixels_per_column - p.ring; //reverse the ring order to match Velodyne's (except NATIVE mode which respects Ouster original ring order)
        out.points.push_back(q);
    }
 }
@@ -261,9 +269,26 @@ void convert2XYZIF(const CloudOS1& in, CloudOS1XYZIF& out)
 }
 
 /**
- * @note Extract intensity and reflectivity and ambient noise data
+ * @note Extract intensity, ring and reflectivity data
  */
+void convert2XYZIRF(const CloudOS1& in, CloudOS1XYZIRF& out) 
+{
+   out.points.clear();
+   PointXYZIRF q;
+   for (auto p : in.points) {
+       q.x = p.x;
+       q.y = p.y;
+       q.z = p.z;
+       q.intensity = p.intensity;
+       q.ring = pixels_per_column - p.ring; //reverse the ring order to match Velodyne's (except NATIVE mode which respects Ouster original ring order)
+       q.reflectivity = p.reflectivity;
+       out.points.push_back(q);
+   }
+}
 
+/**
+ * @note Extract intensity, reflectivity and ambient noise data
+ */
 void convert2XYZIFN(const CloudOS1& in, CloudOS1XYZIFN& out) 
 {
    out.points.clear();
@@ -273,6 +298,25 @@ void convert2XYZIFN(const CloudOS1& in, CloudOS1XYZIFN& out)
        q.y = p.y;
        q.z = p.z;
        q.intensity = p.intensity;
+       q.reflectivity = p.reflectivity;
+       q.noise = p.noise;
+       out.points.push_back(q);
+   }
+}
+
+/**
+ * @note Extract intensity, ring, reflectivity and ambient noise data
+ */
+void convert2XYZIRFN(const CloudOS1& in, CloudOS1XYZIRFN& out) 
+{
+   out.points.clear();
+   PointXYZIRFN q;
+   for (auto p : in.points) {
+       q.x = p.x;
+       q.y = p.y;
+       q.z = p.z;
+       q.intensity = p.intensity;
+       q.ring = pixels_per_column - p.ring; //reverse the ring order to match Velodyne's (except NATIVE mode which respects Ouster original ring order)
        q.reflectivity = p.reflectivity;
        q.noise = p.noise;
        out.points.push_back(q);

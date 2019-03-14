@@ -29,9 +29,26 @@ struct EIGEN_ALIGN16 PointXYZIF {
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
+struct EIGEN_ALIGN16 PointXYZIRF {
+    PCL_ADD_POINT4D;
+    uint16_t intensity;
+    uint16_t ring;
+    uint16_t reflectivity;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+
 struct EIGEN_ALIGN16 PointXYZIFN {
     PCL_ADD_POINT4D;
     uint16_t intensity;
+    uint16_t reflectivity;
+    uint16_t noise;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+};
+
+struct EIGEN_ALIGN16 PointXYZIRFN {
+    PCL_ADD_POINT4D;
+    uint16_t intensity;
+    uint16_t ring;
     uint16_t reflectivity;
     uint16_t noise;
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
@@ -66,6 +83,15 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::OS1::PointXYZIF,
     (uint16_t, reflectivity, reflectivity)
 )
 
+POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::OS1::PointXYZIRF,
+    (float, x, x)
+    (float, y, y)
+    (float, z, z)
+    (uint16_t, intensity, intensity)
+    (uint16_t, ring, ring)
+    (uint16_t, reflectivity, reflectivity)
+)
+
 POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::OS1::PointXYZIFN,
     (float, x, x)
     (float, y, y)
@@ -75,5 +101,13 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::OS1::PointXYZIFN,
     (uint16_t, noise, noise)
 )
 
-
+POINT_CLOUD_REGISTER_POINT_STRUCT(ouster_ros::OS1::PointXYZIRFN,
+    (float, x, x)
+    (float, y, y)
+    (float, z, z)
+    (uint16_t, intensity, intensity)
+    (uint16_t, ring, ring)
+    (uint16_t, reflectivity, reflectivity)
+    (uint16_t, noise, noise)
+)
 

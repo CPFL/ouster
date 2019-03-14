@@ -49,24 +49,8 @@ int main(int argc, char** argv) {
     auto imu_frame_name = nh.param("imu_frame_name", std::string("/os1_imu"));
     auto pointcloud_mode = nh.param("pointcloud_mode", std::string("NATIVE"));
     auto operation_mode_str = nh.param("operation_mode", std::string("1024x10"));
-    auto pulse_mode = nh.param("pulse_mode", 0);
+    auto pulse_mode_str = nh.param("pulse_mode", std::string("STANDARD"));
     auto window_rejection = nh.param("window_rejection", true);
-    
-    //0:512x10, 1:1024x10, 2:2048x10, 3:512x20, 4:1024x20
-    ouster::OS1::OperationMode operation_mode = ouster::OS1::MODE_1024x10; // default mode
-    if (operation_mode_str == std::string("512x10")) {
-    	operation_mode = ouster::OS1::MODE_512x10;
-    } else if (operation_mode_str == std::string("1024x10")) {
-    	operation_mode = ouster::OS1::MODE_1024x10;
-    } else if (operation_mode_str == std::string("2048x10")) {
-    	operation_mode = ouster::OS1::MODE_2048x10;
-    } else if (operation_mode_str == std::string("512x20")) {
-    	operation_mode = ouster::OS1::MODE_512x20;
-    } else if (operation_mode_str == std::string("1024x20")) {
-    	operation_mode = ouster::OS1::MODE_1024x20;
-    } else {
-    	ROS_WARN_STREAM("Operation mode: \"" << operation_mode_str << "\" is not supported, reverting to default mode \"1024x10\"");
-    }
     
     /**
      * @note Added to support Velodyne compatible pointcloud format for Autoware
@@ -78,9 +62,9 @@ int main(int argc, char** argv) {
      * @note Added to support advanced mode parameters configuration for Autoware
      */
     //defines the advanced parameters
-    ouster::OS1::set_advanced_params(operation_mode, (ouster::OS1::PulseMode)pulse_mode, window_rejection);
+    ouster::OS1::set_advanced_params(operation_mode_str, pulse_mode_str, window_rejection);
     auto queue_size = 10;
-    if (operation_mode == ouster::OS1::MODE_512x20 || operation_mode == ouster::OS1::MODE_1024x20) {
+    if (operation_mode_str == std::string("512x20") || operation_mode_str == std::string("1024x20")) {
     	queue_size = 20;
     	scan_dur = scan_dur / 2; //scan duration should be smaller at faster frame rates
     }
