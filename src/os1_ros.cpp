@@ -108,11 +108,7 @@ sensor_msgs::PointCloud2 cloud_to_cloud_msg(const CloudOS1& cloud, ns timestamp,
     }
 
     msg.header.frame_id = frame;
-    /**
-     * @note Changed timestamp from LiDAR to ROS time for Autoware operation
-     */
-    //msg.header.stamp.fromNSec(timestamp.count()); //<-- original code of OS1 driver
-    msg.header.stamp = ros::Time::now();  //<-- prefered time mode in Autoware
+    msg.header.stamp.fromNSec(timestamp.count());
     return msg;
 }
 
@@ -193,7 +189,7 @@ std::function<void(const PacketMsg&)> batch_packets(
 
         auto batch_dur = packet_ts - scan_ts;
         if (batch_dur >= scan_dur || batch_dur < ns(0)) {
-            f(scan_ts, *cloud);
+            f(packet_ts, *cloud);
 
             cloud->clear();
             scan_ts = ns(-1L);

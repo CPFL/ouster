@@ -24,9 +24,11 @@ using ns = std::chrono::nanoseconds;
  * @note Added to support advanced mode parameters configuration for Autoware
  */
 static OperationMode _operation_mode = ouster::OS1::MODE_1024x10;
+static TimestampMode _timestamp_mode = ouster::OS1::TIME_FROM_INTERNAL_OSC;
 static PulseMode _pulse_mode = ouster::OS1::PULSE_STANDARD;
 static bool _window_rejection = true;
 static std::string _operation_mode_str = "";
+static std::string _timestamp_mode_str = "";
 static std::string _pulse_mode_str = "";
 static std::string _window_rejection_str = "";
 //----------------
@@ -232,6 +234,7 @@ std::shared_ptr<client> init_client(const std::string& hostname,
     
     //read the current settings
     auto curr_operation_mode_str = get_cmd("get_config_param", "active lidar_mode");
+    auto curr_timestamp_mode_str = get_cmd("get_config_param", "active timestamp_mode");
     auto curr_pulse_mode_str = std::string("");
     if (has_pulsemode) {
     	curr_pulse_mode_str = get_cmd("get_config_param", "active pulse_mode");
@@ -245,6 +248,10 @@ std::shared_ptr<client> init_client(const std::string& hostname,
     	success &= do_cmd_chk("set_config_param", "lidar_mode " + _operation_mode_str);
     	do_configure = true;
    	}
+    if (curr_timestamp_mode_str != _timestamp_mode_str) {
+        success &= do_cmd_chk("set_config_param", "timestamp_mode " + _timestamp_mode_str);
+        do_configure = true;
+    }
    	if (has_pulsemode && (curr_pulse_mode_str != _pulse_mode_str)) {
 	    success &= do_cmd_chk("set_config_param", "pulse_mode " + _pulse_mode_str);
 	    do_configure = true;
@@ -320,9 +327,11 @@ bool read_imu_packet(const client& cli, uint8_t* buf) {
  * @note Added to support advanced mode parameters configuration for Autoware
  */
 //----------------
-void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str, bool window_rejection)
+void set_advanced_params(std::string operation_mode_str, std::string timestamp_mode_str,
+                         std::string pulse_mode_str, bool window_rejection)
 {
    _operation_mode_str = operation_mode_str;
+   _timestamp_mode_str = timestamp_mode_str;
    _pulse_mode_str = pulse_mode_str;
    _window_rejection = window_rejection;
    
@@ -340,6 +349,17 @@ void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_
    } else {
    	   std::cout << "Selected operation mode " << _operation_mode_str << " is invalid, using default mode \"1024x10\"" << std::endl;
    }
+
+    _timestamp_mode = ouster::OS1::TIME_FROM_INTERNAL_OSC;
+    if (_timestamp_mode_str == std::string("TIME_FROM_INTERNAL_OSC")) {
+        _timestamp_mode = ouster::OS1::TIME_FROM_INTERNAL_OSC;
+    } else if (_timestamp_mode_str == std::string("TIME_FROM_PTP_1588")) {
+        _timestamp_mode = ouster::OS1::TIME_FROM_PTP_1588;
+    } else if (_timestamp_mode_str == std::string("TIME_FROM_SYNC_PULSE_IN")) {
+        _timestamp_mode = ouster::OS1::TIME_FROM_SYNC_PULSE_IN;
+    } else {
+        std::cout << "Selected timestamp mode " << _timestamp_mode_str << " is invalid, using default mode \"TIME_FROM_INTERNAL_OSC\"" << std::endl;
+    }
 
    _pulse_mode = ouster::OS1::PULSE_STANDARD;
    if (_pulse_mode_str == std::string("STANDARD")) {
