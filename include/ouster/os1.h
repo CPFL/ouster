@@ -72,6 +72,16 @@ typedef enum {
 using OperationMode = operation_mode_t;
 
 /**
+ * Timestamp modes supported by the OS1 LiDAR
+ */
+typedef enum {
+      TIME_FROM_INTERNAL_OSC=0,
+      TIME_FROM_PTP_1588=1,
+      TIME_FROM_SYNC_PULSE_IN=2,
+} timestamp_mode_t;
+using TimestampMode = timestamp_mode_t;
+
+/**
  * Laser pulse modes supported by the OS1 LiDAR
  */
 typedef enum {
@@ -86,7 +96,8 @@ using PulseMode = pulse_mode_t;
  * @param window_rejection to reject short range data (true), or to accept short range data (false)
  * @note This function was added to configure advanced operation modes for Autoware
  */
-void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str, bool window_rejection);
+void set_advanced_params(std::string operation_mode_str, std::string timestamp_mode_str,
+                         std::string pulse_mode_str, bool window_rejection);
 
 }
 }

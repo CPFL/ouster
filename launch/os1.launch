@@ -15,6 +15,7 @@
   <arg name="imu_frame_name" default="imu" doc="Frame name for IMU output message"/>
   <arg name="imu_topic_name" default="/imu_raw" doc="Topic name for IMU output message"/>
   <arg name="operation_mode" default="1024x10" doc="Supported operation modes: 512x10, 1024x10, 2048x10, 512x20, 1024x20 (horizontal resolution x scan rate)"/>
+  <arg name="timestamp_mode" default="TIME_FROM_INTERNAL_OSC" doc="Supported timestamp modes: TIME_FROM_INTERNAL_OSC, TIME_FROM_PTP_1588, TIME_FROM_SYNC_PULSE_IN"/>
   <arg name="pulse_mode" default="STANDARD" doc="Laser pulse width, available modes: STANDARD and NARROW"/>
   <arg name="window_rejection" default="true" doc="Window (short range) rejection enable"/>
 
@@ -31,6 +32,7 @@
     <param name="imu_frame_name" value="$(arg imu_frame_name)"/>
     <param name="pointcloud_mode" value="$(arg pointcloud_mode)"/>
     <param name="operation_mode" value="$(arg operation_mode)"/>
+    <param name="timestamp_mode" value="$(arg timestamp_mode)"/>
     <param name="pulse_mode" value="$(arg pulse_mode)"/>
     <param name="window_rejection" value="$(arg window_rejection)"/>
   </node>

@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
     auto imu_frame_name = nh.param("imu_frame_name", std::string("/os1_imu"));
     auto pointcloud_mode = nh.param("pointcloud_mode", std::string("NATIVE"));
     auto operation_mode_str = nh.param("operation_mode", std::string("1024x10"));
+    auto timestamp_mode_str = nh.param("timestamp_mode", std::string("TIME_FROM_INTERNAL_OSC"));
     auto pulse_mode_str = nh.param("pulse_mode", std::string("STANDARD"));
     auto window_rejection = nh.param("window_rejection", true);
     
@@ -62,7 +63,8 @@ int main(int argc, char** argv) {
      * @note Added to support advanced mode parameters configuration for Autoware
      */
     //defines the advanced parameters
-    ouster::OS1::set_advanced_params(operation_mode_str, pulse_mode_str, window_rejection);
+    ouster::OS1::set_advanced_params(operation_mode_str, timestamp_mode_str,
+                                     pulse_mode_str, window_rejection);
     auto queue_size = 10;
     if (operation_mode_str == std::string("512x20") || operation_mode_str == std::string("1024x20")) {
     	queue_size = 20;
@@ -75,6 +77,12 @@ int main(int argc, char** argv) {
 
     auto lidar_handler = ouster_driver::OS1::batch_packets(
         scan_dur, [&](ns scan_ts, const ouster_driver::OS1::CloudOS1& cloud) {
+            /**
+            * @note Changed timestamp from LiDAR to ROS time for Autoware operation,
+            *       unless time is already synchronized using PTP
+            */
+            if (timestamp_mode_str != std::string("TIME_FROM_PTP_1588"))
+                scan_ts = ns(ros::Time::now().toNSec());
             lidar_pub.publish(
                 ouster_driver::OS1::cloud_to_cloud_msg(cloud, scan_ts, lidar_frame_name));
         });
