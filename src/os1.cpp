@@ -348,6 +348,7 @@ void set_advanced_params(std::string operation_mode_str, std::string timestamp_m
        _operation_mode = ouster::OS1::MODE_1024x20;
    } else {
    	   std::cout << "Selected operation mode " << _operation_mode_str << " is invalid, using default mode \"1024x10\"" << std::endl;
+       _operation_mode_str = "1024x10";
    }
 
     _timestamp_mode = ouster::OS1::TIME_FROM_INTERNAL_OSC;
@@ -359,6 +360,7 @@ void set_advanced_params(std::string operation_mode_str, std::string timestamp_m
         _timestamp_mode = ouster::OS1::TIME_FROM_SYNC_PULSE_IN;
     } else {
         std::cout << "Selected timestamp mode " << _timestamp_mode_str << " is invalid, using default mode \"TIME_FROM_INTERNAL_OSC\"" << std::endl;
+        _timestamp_mode_str = "TIME_FROM_INTERNAL_OSC";
     }
 
    _pulse_mode = ouster::OS1::PULSE_STANDARD;
@@ -368,6 +370,7 @@ void set_advanced_params(std::string operation_mode_str, std::string timestamp_m
    	   _pulse_mode = ouster::OS1::PULSE_NARROW;
    } else {
    	   std::cout << "Selected pulse mode " << _pulse_mode_str << " is invalid, using default mode \"STANDARD\"" << std::endl;
+       _pulse_mode_str = "STANDARD";
    }
 
    _window_rejection_str = ((_window_rejection) ? std::string("1") : std::string("0"));
