@@ -86,7 +86,7 @@ using PulseMode = pulse_mode_t;
  * @param window_rejection to reject short range data (true), or to accept short range data (false)
  * @note This function was added to configure advanced operation modes for Autoware
  */
-void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str, bool window_rejection);
+void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str);
 
 }
 }
