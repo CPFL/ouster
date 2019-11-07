@@ -50,7 +50,6 @@ int main(int argc, char** argv) {
     auto pointcloud_mode = nh.param("pointcloud_mode", std::string("NATIVE"));
     auto operation_mode_str = nh.param("operation_mode", std::string("1024x10"));
     auto pulse_mode_str = nh.param("pulse_mode", std::string("STANDARD"));
-    auto window_rejection = nh.param("window_rejection", true);
     
     /**
      * @note Added to support Velodyne compatible pointcloud format for Autoware
@@ -62,7 +61,7 @@ int main(int argc, char** argv) {
      * @note Added to support advanced mode parameters configuration for Autoware
      */
     //defines the advanced parameters
-    ouster::OS1::set_advanced_params(operation_mode_str, pulse_mode_str, window_rejection);
+    ouster::OS1::set_advanced_params(operation_mode_str, pulse_mode_str);
     auto queue_size = 10;
     if (operation_mode_str == std::string("512x20") || operation_mode_str == std::string("1024x20")) {
     	queue_size = 20;

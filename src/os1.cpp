@@ -25,10 +25,8 @@ using ns = std::chrono::nanoseconds;
  */
 static OperationMode _operation_mode = ouster::OS1::MODE_1024x10;
 static PulseMode _pulse_mode = ouster::OS1::PULSE_STANDARD;
-static bool _window_rejection = true;
 static std::string _operation_mode_str = "";
 static std::string _pulse_mode_str = "";
-static std::string _window_rejection_str = "";
 //----------------
 
 struct client {
@@ -249,10 +247,6 @@ std::shared_ptr<client> init_client(const std::string& hostname,
 	    success &= do_cmd_chk("set_config_param", "pulse_mode " + _pulse_mode_str);
 	    do_configure = true;
     }
-    if (curr_window_rejection_str != _window_rejection_str) {
-		success &= do_cmd_chk("set_config_param", "window_rejection_enable " + _window_rejection_str);
-		do_configure = true;
-   	}
     
     if (!success) return std::shared_ptr<client>();
     
@@ -320,11 +314,10 @@ bool read_imu_packet(const client& cli, uint8_t* buf) {
  * @note Added to support advanced mode parameters configuration for Autoware
  */
 //----------------
-void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str, bool window_rejection)
+void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_str)
 {
    _operation_mode_str = operation_mode_str;
    _pulse_mode_str = pulse_mode_str;
-   _window_rejection = window_rejection;
    
    _operation_mode = ouster::OS1::MODE_1024x10;
    if (_operation_mode_str == std::string("512x10")) {
@@ -349,8 +342,6 @@ void set_advanced_params(std::string operation_mode_str, std::string pulse_mode_
    } else {
    	   std::cout << "Selected pulse mode " << _pulse_mode_str << " is invalid, using default mode \"STANDARD\"" << std::endl;
    }
-
-   _window_rejection_str = ((_window_rejection) ? std::string("1") : std::string("0"));
 }
 //----------------
 
